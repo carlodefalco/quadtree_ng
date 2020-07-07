@@ -1,1 +1,12 @@
+Name: quadtree_ng
+Version: 0.0.1
+Date: 2020-07-07
+Author: Carlo de Falco
+Maintainer: Carlo de Falco
+Title: quadtree_ng
+Description: Octave Quadtree Class.
+Depends: octave (>= 5.2.0)
+Autoload: no
+License: GPLv3+
+Url: https://github.com/carlodefalco/quadtree_ng
 
