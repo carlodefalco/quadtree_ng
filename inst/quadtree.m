@@ -32,6 +32,7 @@ classdef quadtree < handle
 
     function qt = quadtree (H, W, N)
       if (nargin > 0)
+        N    = 2^N;
         qt.H = H;
         qt.W = W;
         qt.N = N;
@@ -80,7 +81,7 @@ classdef quadtree < handle
 
     function h = draw_quadrant (qt, k)
       [i, j, v] = deal (qt.I(k), qt.J(k), qt. V(k));
-      [x0, y0, x1, y1] = idx2coord (qt, i, j)
+      [x0, y0, x1, y1] = idx2coord (qt, i, j);
       h = plot ([x0, x1, x1, x0, x0], [y0, y0, y1, y1, y0], 'k');
     endfunction    
 
@@ -94,7 +95,8 @@ classdef quadtree < handle
     function paint (qt)
       I = full (qt.S);
       I(qt.N+1,qt.N+1)=0;
-      [x0, y0] = meshgrid (linspace (0, qt.W, qt.N+1), linspace (0, qt.H, qt.N+1));
+      [x0, y0] = meshgrid (linspace (0, qt.W, qt.N+1),
+                           linspace (0, qt.H, qt.N+1));
       for k = 1 : qt.num_quadrants ()
         [i, j, v] = deal (qt.I(k), qt.J(k), qt. V(k));        
         I(i-1+(1:v), j-1+(1:v)) = v;  
@@ -103,9 +105,29 @@ classdef quadtree < handle
       h = pcolor (x0, y0, I);
       set (h, 'edgecolor', 'none');
       qt.draw ();
-      I
+    endfunction
+
+    function p = firstborn (qt, k)
+      p = floor (log2 (k-1));
     endfunction
     
   endmethods
   
 endclassdef
+
+%!demo
+%! qt = quadtree (1, 1, 10);
+%! qt.refine (1); qt.refresh ();
+%! qt.refine (2); qt.refresh ();
+%! qt.refine (3); qt.refresh ();
+%! qt.refine (4); qt.refresh ();
+%! qt.refine (8); qt.refresh ();
+%! qt.refine (13); qt.refresh ();
+%! qt.refine (qt.num_quadrants ()); qt.refresh ();
+%! qt.refine (qt.num_quadrants ()); qt.refresh ();
+%! qt.refine (qt.num_quadrants ()); qt.refresh ();
+%! qt.refine (12); qt.refresh ();
+%! qt.refine (12); qt.refresh ();
+%! qt.refine (12); qt.refresh ();
+%! qt.refine (12); qt.refresh ();
+%! qt.paint ();
